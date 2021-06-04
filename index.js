@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 
 //FS import
-const dbConn = require("./config/dbConn");
+const dbConn = require("./utils/dbConn");
 const userRoutes = require("./routes/userRoutes");
 const menuRoutes = require("./routes/menuRoutes");
 const orderRoutes = require("./routes/orderRoutes");
@@ -30,8 +30,8 @@ const { PORT } = process.env;
 
 
     //route forwarding
-    app.use('/api/users/', userRoutes);
-    app.use('/api/menus/', menuRoutes);
+    app.use('/api/user/', userRoutes);
+    app.use('/api/menu/', menuRoutes);
     app.use('/api/orders/', orderRoutes);
 
     //listen to requests 

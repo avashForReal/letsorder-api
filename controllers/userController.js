@@ -19,6 +19,8 @@ exports.signup = async(req, res, next) => {
         //validate the data
         //to be done
 
+        //check if email is already registered
+
         //hash the password
         const hashedPassword = await hashPassword(password);
         //define new user from using user model

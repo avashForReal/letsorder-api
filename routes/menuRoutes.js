@@ -5,11 +5,17 @@ const router = express.Router()
 const checkAuth = require("../middlewares/checkAuth");
 const checkAdmin = require("../middlewares/checkAdmin");
 const checkEmployee = require("../middlewares/checkEmployee");
+const checkCustomer = require("../middlewares/checkCustomer");
 
+//menu controller
+const menuController = require("../controllers/menuController")
 
+//routes with admin access
+//add new menu
 router.route('/')
-    .post([checkAuth, checkAdmin], (req, res) => {
-        res.send('looks like you are an admin');
-    })
+    .get(menuController.getMenu)
+    .post(menuController.addMenu)
+
+
 
 module.exports = router

@@ -1,8 +1,5 @@
-//401 unauthorized
-//403 forbidden
-//400 something went wrong
 module.exports = (req, res, next) => {
-    if (req.user.userRole !== "admin") {
+    if (req.user.userRole !== "customer") {
         return res.status(403).json({ error: "Access denied. Not enough rights!" });
     } else {
         next();

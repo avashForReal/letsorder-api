@@ -10,12 +10,16 @@ const checkCustomer = require("../middlewares/checkCustomer");
 //menu controller
 const menuController = require("../controllers/menuController")
 
-//routes with admin access
+//todo: protect routes with proper access
+
+// /api/menu/
 //add new menu
 router.route('/')
     .get(menuController.getMenu)
     .post(menuController.addMenu)
 
-
+// /api/menu/:menuId
+router.route('/:menuId')
+    .get(menuController.getIndividualMenu)
 
 module.exports = router

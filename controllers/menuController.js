@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 //fs imports
 //import menu model
 const Menu = require("../models/menuModel");
@@ -63,8 +65,10 @@ const addMenu = async(req, res, next) => {
 };
 
 //get all menu categories
+//GET /api/menu/
 const getMenu = async(req, res) => {
     try {
+        //get all menus
         const menu = await Menu.find({});
         res.status(200).send(menu);
     } catch (err) {
@@ -73,14 +77,29 @@ const getMenu = async(req, res) => {
     }
 };
 
-// get menu
+// get individual menu
+// menuId -> must be a valid mongoose object id
 // GET /api/menu/:menuId
+const getIndividualMenu = async(req, res) => {
+    try {
+        const menuId = req.params.menuId;
+        if (mongoose.isValidObjectId(menuId)) {
+            const individualMenu = await Menu.findById({ _id: menuId });
+            res.status(200).send(individualMenu);
+        } else {
+            res.status(404).send({ error: "Menu not found!" });
+        }
+    } catch (err) {
+        res.status(400).send({ error: err });
+    }
+};
 
-//delete menu
+//delete individual menu item
 //DELETE /api/menu/:menuId
 
+
 //add menu item
-//POST /api/menu/:menuId
+//POST /api/menu/:menuId/
 /*
             {
 						"itemName": "Coffee Capuccino",
@@ -95,4 +114,4 @@ const getMenu = async(req, res) => {
 //delete menu
 //DELETE /api/menu/:menuId
 
-module.exports = { addMenu, getMenu };
+module.exports = { addMenu, getMenu, getIndividualMenu };

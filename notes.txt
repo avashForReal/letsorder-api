@@ -1,0 +1,38 @@
+[
+    {
+        "_id": "60b9f953819dc0cc9779abaf",
+        "menuCategory": "momo",
+        "menuItems": [
+            {
+                "itemDescription": "veggie momo that is steamed",
+                "_id": "60b9f953819dc0cc9779abb0",
+                "itemName": "Veg Momo Steamed",
+                "itemPrice": 80
+            },
+            {
+                "itemDescription": "Chicken momo that is fried",
+                "_id": "60b9f953819dc0cc9779abb1",
+                "itemName": "Chicken Momo Fried",
+                "itemPrice": 110
+            }
+        ],
+        "createdAt": "2021-06-04T09:58:43.978Z",
+        "updatedAt": "2021-06-04T09:58:43.978Z",
+        "__v": 0
+    },
+    {
+        "_id": "60b9f9c92e3540cd29c4f205",
+        "menuCategory": "pizza",
+        "menuItems": [
+            {
+                "itemDescription": "chicken pizza very tasty",
+                "_id": "60b9f9c92e3540cd29c4f206",
+                "itemName": "chicken pizza",
+                "itemPrice": 160
+            }
+        ],
+        "createdAt": "2021-06-04T10:00:41.870Z",
+        "updatedAt": "2021-06-04T10:00:41.870Z",
+        "__v": 0
+    }
+]

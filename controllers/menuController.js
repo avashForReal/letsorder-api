@@ -77,14 +77,14 @@ const getMenu = async(req, res) => {
     }
 };
 
-// get individual menu
+// get individual menu category
 // menuId -> must be a valid mongoose object id
 // GET /api/menu/:menuId
 const getIndividualMenu = async(req, res) => {
     try {
         const menuId = req.params.menuId;
         if (mongoose.isValidObjectId(menuId)) {
-            const individualMenu = await Menu.findById({ _id: menuId });
+            const individualMenu = await Menu.findById(menuId);
             res.status(200).send(individualMenu);
         } else {
             res.status(404).send({ error: "Menu not found!" });
@@ -94,24 +94,98 @@ const getIndividualMenu = async(req, res) => {
     }
 };
 
-//delete individual menu item
+//delete menu category
 //DELETE /api/menu/:menuId
-
+const deleteIndividualMenu = async(req, res) => {
+    try {
+        const menuId = req.params.menuId;
+        // proceed only if object id is valid
+        if (mongoose.isValidObjectId(menuId)) {
+            const deletedMenu = await Menu.findByIdAndDelete(menuId);
+            if (deletedMenu) {
+                res.status(200).send({ deletedMenu });
+            } else {
+                res.status(404).send({ error: "Menu not found!" });
+            }
+        } else {
+            res.status(404).send({ error: "Menu not found!" });
+        }
+    } catch (err) {
+        res.status(400).send({ error: err });
+    }
+};
 
 //add menu item
-//POST /api/menu/:menuId/
-/*
+//POST /api/menu/:menuId/item
+/* Menu item schema
             {
 						"itemName": "Coffee Capuccino",
 						"itemDescription": "coffee with the best flavour of Capuccino",
 						"itemPrice"	: 100
 			}  
 */
+const addIndividualMenuItem = async(req, res) => {
+    try {
+        //validate the data from request body
+        const { error } = validateMenuItems(req.body);
+        if (error) {
+            return res.status(400).send(error.details[0].message);
+        }
 
-// get menu
-// GET /api/menu/:menuId
+        //get the params
+        const menuId = req.params.menuId;
 
-//delete menu
-//DELETE /api/menu/:menuId
+        // check if the menuId is valid
+        if (mongoose.isValidObjectId(menuId)) {
+            // check if the menu with requested id exists
+            const individualMenu = await Menu.findById(menuId);
+            if (individualMenu) {
+                // destructure the data
+                const { itemName, itemDescription, itemPrice } = req.body;
+                const itemToInsert = { itemName, itemDescription, itemPrice };
+                // individualMenu.menuItems.push(itemToInsert);
+                // await individualMenu.save();
 
-module.exports = { addMenu, getMenu, getIndividualMenu };
+                //update(push new item) to the menu
+                const updatedMenu = await Menu.findByIdAndUpdate(
+                    menuId, { $push: { menuItems: itemToInsert } }, { new: true }
+                );
+                res.status(201).send({
+                    updatedMenu,
+                    message: "New item successfully added !",
+                });
+            } else {
+                res.status(404).send({ error: "Menu to update is not found!" });
+            }
+        } else {
+            res.status(404).send({ error: "Menu not found!" });
+        }
+
+        // console.log(itemName, itemDescription, itemPrice, menuId);
+    } catch (err) {
+        // console.log(err)
+        res.status(400).send({ error: err });
+    }
+};
+
+
+//get menu item by id
+//GET /api/menu/:menuId/item/:itemId
+const getIndividualMenuItem = (req, res) => {
+    try {
+
+    } catch (err) {
+        res.status(400).send({ error: err })
+    }
+}
+
+//delete menu item
+//DELETE /api/menu/:menuId/item/:itemId
+
+module.exports = {
+    addMenu,
+    getMenu,
+    getIndividualMenu,
+    deleteIndividualMenu,
+    addIndividualMenuItem,
+};

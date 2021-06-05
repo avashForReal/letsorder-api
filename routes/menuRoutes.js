@@ -21,5 +21,11 @@ router.route('/')
 // /api/menu/:menuId
 router.route('/:menuId')
     .get(menuController.getIndividualMenu)
+    .delete(menuController.deleteIndividualMenu)
+
+//api/menu/:menuId/items
+router.route('/:menuId/item')
+    .post(menuController.addIndividualMenuItem)
+
 
 module.exports = router

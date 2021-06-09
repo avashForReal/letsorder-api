@@ -168,19 +168,71 @@ const addIndividualMenuItem = async(req, res) => {
     }
 };
 
+//get all menu item from the menu item array
+//GET /api/menu/:menuId/item
+const getAllMenuItem = async(req, res) => {
+    try {
+        const menuId = req.params.menuId;
+        if (mongoose.isValidObjectId(menuId)) {
+            const individualMenu = await Menu.findById(menuId);
+            res.status(200).send(individualMenu.menuItems);
+        } else {
+            res.status(404).send({ error: "Menu not found!" });
+        }
+    } catch (err) {
+        res.status(400).send({ error: err });
+    }
+};
 
 //get menu item by id
 //GET /api/menu/:menuId/item/:itemId
-const getIndividualMenuItem = (req, res) => {
+const getIndividualMenuItem = async(req, res) => {
     try {
+        const menuId = req.params.menuId;
+        const itemId = req.params.itemId;
 
+        if (mongoose.isValidObjectId(menuId) && mongoose.isValidObjectId(itemId)) {
+            const individualItem = await Menu.aggregate([
+                { $unwind: "$menuItems" },
+                {
+                    $match: {
+                        _id: mongoose.Types.ObjectId(menuId),
+                        "menuItems._id": mongoose.Types.ObjectId(itemId),
+                    },
+                },
+            ]);
+            // const individualItem = await Menu.find({ _id: mongoose.Types.ObjectId(menuId), "menuItems._id": mongoose.Types.ObjectId(itemId) });
+            if (!individualItem.length) {
+                res.status(404).send({ error: "Requested item could not be found!" });
+            } else {
+                res.send(individualItem[0]);
+            }
+        } else {
+            res.status(404).send({ error: "Requested item could not be found!" });
+        }
     } catch (err) {
-        res.status(400).send({ error: err })
+        // console.log(err)
+        res.status(400).send({ error: err });
     }
-}
+};
 
 //delete menu item
-//DELETE /api/menu/:menuId/item/:itemId
+//DELETE /api/menu/:menuId/item/:itemId/
+const deleteIndividualMenuItem = async(req, res) => {
+    try {
+        const menuId = req.params.menuId;
+        const itemId = req.params.itemId;
+
+        if (mongoose.isValidObjectId(menuId) && mongoose.isValidObjectId(itemId)) {
+            await Menu.updateOne({ _id: mongoose.Types.ObjectId(menuId) }, { $pull: { menuItems: { _id: mongoose.Types.ObjectId(itemId) } } });
+            res.status(200).send({ message: "Item successfully deleted" });
+        } else {
+            res.status(404).send({ error: "Requested item could not be found!" });
+        }
+    } catch (err) {
+        res.status(400).send({ error: err });
+    }
+};
 
 module.exports = {
     addMenu,
@@ -188,4 +240,7 @@ module.exports = {
     getIndividualMenu,
     deleteIndividualMenu,
     addIndividualMenuItem,
+    getAllMenuItem,
+    getIndividualMenuItem,
+    deleteIndividualMenuItem
 };

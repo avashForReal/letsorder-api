@@ -32,7 +32,7 @@ const { PORT } = process.env;
     //route forwarding
     app.use('/api/user/', userRoutes);
     app.use('/api/menu/', menuRoutes);
-    app.use('/api/orders/', orderRoutes);
+    app.use('/api/order/', orderRoutes);
 
     //listen to requests 
     app.listen(PORT || 8080, () => {
